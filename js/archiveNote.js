@@ -4,7 +4,7 @@ import { updateSummaryTable } from "./updateSummaryTable.js";
 export function archiveNote(noteId) {
   const noteToArchive = notesData.find((note) => note.id === noteId);
 
-  if (noteToArchive && !noteToArchive.archived) { // Добавлена проверка на архивированную заметку
+  if (noteToArchive && !noteToArchive.archived) {
     noteToArchive.archived = true;
 
     displayNotesInTable(

@@ -33,18 +33,36 @@ export function displayNotesInTable(notes, tableId) {
       const datesMentionedCell = document.createElement("td");
       const allDatesMentionedCell = document.createElement("td");
       const actionsCell = document.createElement("td");
+      const dateOptions = {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      };
 
-      createdCell.textContent = new Date(note.created).toLocaleString();
+      createdCell.textContent = new Date(note.created).toLocaleString(
+        "en-US",
+        dateOptions
+      );
       contentCell.textContent = note.content;
       categoryCell.textContent = note.category;
-      datesMentionedCell.textContent = note.datesMentioned.join(", ");
+      const formattedDatesMentioned = note.datesMentioned.map((date) =>
+        new Date(date).toLocaleString("en-US", dateOptions)
+      );
+      datesMentionedCell.textContent = formattedDatesMentioned.join(", ");
+      const datesToDisplay = [];
 
       if (note.datesMentionedEdited && note.datesMentionedEdited.length > 0) {
-        allDatesMentionedCell.textContent =
-          note.datesMentionedEdited.join(", ");
-      } else {
-        allDatesMentionedCell.textContent = "";
+        datesToDisplay.push(
+          ...note.datesMentionedEdited.map((date) =>
+            new Date(date).toLocaleString("en-US", dateOptions)
+          )
+        );
       }
+      datesToDisplay.push(
+        new Date(note.created).toLocaleString("en-US", dateOptions)
+      );
+
+      allDatesMentionedCell.textContent = datesToDisplay.join(", ");
 
       const editBtn = createButton("Edit", "btn", () => editNote(note.id));
       const deleteBtn = createButton("Delete", "btn", () =>

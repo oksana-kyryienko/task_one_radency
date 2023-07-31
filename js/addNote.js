@@ -12,7 +12,6 @@ export function addNote() {
   const noteCategoryInput = document.getElementById("noteCategory");
   const datesMentionedInput = document.getElementById("datesMentioned");
 
- 
   noteContentInput.value = "";
   noteCategoryInput.value = "";
   datesMentionedInput.value = "";
@@ -21,6 +20,7 @@ export function addNote() {
   addNoteModalBtn.addEventListener("click", saveChanges);
 
   function saveChanges() {
+    let isValid = true;
     try {
       console.log("saveChanges function is called!");
       const content = noteContentInput.value;
@@ -29,40 +29,42 @@ export function addNote() {
 
         .split(",")
         .map((date) => date.trim());
-        
 
       const contentPattern = /^(?=.*[a-zA-Zа-яА-Я0-9]).{3,200}$/;
       if (!content.match(contentPattern)) {
         alert(
           "Note content should be between 3 and 200 characters and contain at least one alphanumeric character."
         );
-        return;
+        isValid = false;
       }
 
       if (!category) {
         alert("Please choose note category.");
-        return;
+        isValid = false;
       }
 
-      const newNote = {
-        id: notesData.length + 1,
-        created: new Date().toISOString(),
-        content: content,
-        category: category,
-        datesMentioned: datesMentioned,
-        archived: false,
-      };
+      if (isValid) {
+        const originalCreatedDate = new Date().toISOString();
+        const newNote = {
+          id: notesData.length + 1,
+          created: originalCreatedDate,
+          content: content,
+          category: category,
+          datesMentioned: datesMentioned,
+          archived: false,
+        };
 
-      notesData.push(newNote);
-      
-
-      modal.style.display = "none";
+        notesData.push(newNote);
+        modal.style.display = "none";
+      }
       displayNotesInTable(
         notesData.filter((note) => !note.archived),
         "notesTable"
       );
       updateSummaryTable();
-      addNoteModalBtn.removeEventListener("click", saveChanges);
+      if (!!isValid) {
+        addNoteModalBtn.removeEventListener("click", saveChanges);
+      }
     } catch (error) {
       console.error("Error occurred while adding the note:", error);
     }
