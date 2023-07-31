@@ -43,6 +43,12 @@ export function addNote() {
         isValid = false;
       }
 
+      
+      if (datesMentioned.length === 0 || datesMentioned[0] === "") {
+        alert("Please select at least one date.");
+        isValid = false;
+      }
+
       if (isValid) {
         const originalCreatedDate = new Date().toISOString();
         const newNote = {
